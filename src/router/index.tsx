@@ -9,8 +9,8 @@ import { ProtectedRoute } from './ProtectedRoute';
 import { RedirectIfAuth } from './RedirectIfAuth';
 
 // Páginas de Erro e 404
-import { ErrorPage } from '../pages/ErrorPage';
-import { NotFoundPage } from '../pages/NotFoundPage';
+import { Error } from '../pages/Error';
+import { NotFound } from '../pages/NotFound';
 
 // Importação das páginas e seus loaders/actions
 import { Profile, profileLoader } from '../pages/Profile';
@@ -25,7 +25,7 @@ const Messages = lazy(() => import('../pages/Messages').then(module => ({ defaul
 const Chat = lazy(() => import('../pages/Chat').then(module => ({ default: module.Chat })));
 const Friends = lazy(() => import('../pages/Friends').then(module => ({ default: module.Friends })));
 const Notifications = lazy(() => import('../pages/Notifications').then(module => ({ default: module.Notifications })));
-const SearchPage = lazy(() => import('../pages/SearchPage').then(module => ({ default: module.SearchPage })));
+const SearchPage = lazy(() => import('../pages/Search').then(module => ({ default: module.Search })));
 
 const SuspenseFallback = () => (
     <div className="min-h-[calc(100vh-80px)] flex items-center justify-center">
@@ -57,7 +57,7 @@ const AppLayout = ({ showFooter = true }) => {
 
 export const router = createBrowserRouter([
   {
-    errorElement: <ErrorPage />,
+    errorElement: <Error />,
     children: [
       {
         path: '/',
@@ -126,7 +126,7 @@ export const router = createBrowserRouter([
       },
       {
         path: '*',
-        element: <Layout><NotFoundPage /></Layout>,
+        element: <Layout><NotFound /></Layout>,
       },
     ],
   },

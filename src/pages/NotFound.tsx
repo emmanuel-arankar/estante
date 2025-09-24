@@ -3,7 +3,7 @@ import { Button } from '@/components/ui/button';
 import { motion } from 'framer-motion';
 import { BookX } from 'lucide-react';
 
-export const NotFoundPage = () => {
+export const NotFound = () => {
   return (
     <div className="min-h-[calc(100vh-80px)] bg-gradient-to-br from-emerald-50 to-teal-50 flex items-center justify-center p-4 text-center">
       <motion.div
