@@ -6,7 +6,7 @@ import { Layout } from '../components/layout/Layout';
 export const RedirectIfAuth = () => {
   const { user, loading } = useAuth();
 
-  // Mostra um spinner enquanto o estado de autenticação está a ser verificado
+  // Verifica o estado de autenticação
   if (loading) {
     return (
       <Layout showFooter={false}>

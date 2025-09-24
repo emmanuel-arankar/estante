@@ -1,7 +1,8 @@
 import { Suspense, lazy } from 'react';
-import { createBrowserRouter, Outlet } from 'react-router-dom';
+import { createBrowserRouter, Outlet, useLocation, ScrollRestoration, Link, Params } from 'react-router-dom';
 import { Layout } from '../components/layout/Layout';
 import { LoadingSpinner } from '../components/ui/loading-spinner';
+import { motion, AnimatePresence } from 'framer-motion';
 
 // Componentes de Rota
 import { ProtectedRoute } from './ProtectedRoute';
@@ -11,19 +12,20 @@ import { RedirectIfAuth } from './RedirectIfAuth';
 import { ErrorPage } from '../pages/ErrorPage';
 import { NotFoundPage } from '../pages/NotFoundPage';
 
-// Importação da página de perfil e do seu loader
+// Importação das páginas e seus loaders/actions
 import { Profile, profileLoader } from '../pages/Profile';
+import { EditProfile, editProfileAction } from '../pages/EditProfile';
 
-// Importação dinâmica (Lazy Loading) para todas as páginas
+// Lazy loading para as páginas
 const Home = lazy(() => import('../pages/Home').then(module => ({ default: module.Home })));
 const Login = lazy(() => import('../pages/Login').then(module => ({ default: module.Login })));
 const Register = lazy(() => import('../pages/Register').then(module => ({ default: module.Register })));
 const ForgotPassword = lazy(() => import('../pages/ForgotPassword').then(module => ({ default: module.ForgotPassword })));
-const EditProfile = lazy(() => import('../pages/EditProfile').then(module => ({ default: module.EditProfile })));
 const Messages = lazy(() => import('../pages/Messages').then(module => ({ default: module.Messages })));
 const Chat = lazy(() => import('../pages/Chat').then(module => ({ default: module.Chat })));
 const Friends = lazy(() => import('../pages/Friends').then(module => ({ default: module.Friends })));
 const Notifications = lazy(() => import('../pages/Notifications').then(module => ({ default: module.Notifications })));
+const SearchPage = lazy(() => import('../pages/SearchPage').then(module => ({ default: module.SearchPage })));
 
 const SuspenseFallback = () => (
     <div className="min-h-[calc(100vh-80px)] flex items-center justify-center">
@@ -31,13 +33,27 @@ const SuspenseFallback = () => (
     </div>
 );
 
-const AppLayout = ({ showFooter = true }) => (
-  <Layout showFooter={showFooter}>
-    <Suspense fallback={<SuspenseFallback />}>
-      <Outlet />
-    </Suspense>
-  </Layout>
-);
+const AppLayout = ({ showFooter = true }) => {
+  const location = useLocation();
+  return (
+    <Layout showFooter={showFooter}>
+      <ScrollRestoration />
+      <AnimatePresence mode="wait">
+        <motion.div
+          key={location.pathname}
+          initial={{ opacity: 0, y: 15 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: -15 }}
+          transition={{ duration: 0.25 }}
+        >
+          <Suspense fallback={<SuspenseFallback />}>
+            <Outlet />
+          </Suspense>
+        </motion.div>
+      </AnimatePresence>
+    </Layout>
+  );
+};
 
 export const router = createBrowserRouter([
   {
@@ -46,12 +62,20 @@ export const router = createBrowserRouter([
       {
         path: '/',
         element: <AppLayout />,
+        handle: { crumb: () => <Link to="/">Início</Link> },
         children: [
           { index: true, element: <Home /> },
           {
             path: 'profile/:nickname',
             element: <Profile />,
             loader: profileLoader,
+            // CORRIGIDO: Adicionado tipos para `params` e `_data` para ignorar o aviso de não utilizado.
+            handle: { crumb: (_data: any, params: Params) => <span>{`@${params.nickname}`}</span> },
+          },
+          {
+            path: 'search',
+            element: <SearchPage />,
+            handle: { crumb: () => <Link to="/search">Busca</Link> },
           },
         ],
       },
@@ -74,11 +98,28 @@ export const router = createBrowserRouter([
           {
             element: <AppLayout />,
             children: [
-              { path: 'profile/edit', element: <EditProfile /> },
-              { path: 'messages', element: <Messages /> },
+              { 
+                path: 'profile/edit', 
+                element: <EditProfile />,
+                action: editProfileAction,
+                handle: { crumb: () => <span>Editar Perfil</span> }
+              },
+              {
+                path: 'messages',
+                element: <Messages />,
+                handle: { crumb: () => <Link to="/messages">Mensagens</Link> }
+              },
               { path: 'chat/:receiverId', element: <Chat /> },
-              { path: 'friends', element: <Friends /> },
-              { path: 'notifications', element: <Notifications /> },
+              {
+                path: 'friends',
+                element: <Friends />,
+                handle: { crumb: () => <Link to="/friends">Amigos</Link> }
+              },
+              {
+                path: 'notifications',
+                element: <Notifications />,
+                handle: { crumb: () => <Link to="/notifications">Notificações</Link> }
+              },
             ],
           },
         ],

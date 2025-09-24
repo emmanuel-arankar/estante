@@ -8,8 +8,17 @@ import type { LoaderFunctionArgs } from "react-router-dom";
 
 // Ícones
 import {
-    MapPin, Link as LinkIcon, Calendar, BookOpen, Users, Edit3, Cake,
-    UserPlus, UserCheck, MessageCircle, Camera
+    MapPin, 
+    Link as LinkIcon, 
+    Calendar, 
+    BookOpen, 
+    Users, 
+    Edit3, 
+    Cake,
+    UserPlus, 
+    UserCheck, 
+    MessageCircle, 
+    Camera
 } from 'lucide-react';
 
 // Componentes
