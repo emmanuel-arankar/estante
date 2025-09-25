@@ -4,20 +4,19 @@ import { AlertTriangle } from 'lucide-react';
 
 export const Error = () => {
   const error = useRouteError();
-  let errorMessage: string;
-  let errorStatus: number | string = 'Erro';
+  console.error("Erro capturado pela ErrorPage:", error);
 
+  let errorStatus: number | string = 'Erro';
+  let errorMessage: string = 'Ocorreu um erro inesperado.';
+
+  // Forma segura de verificar os tipos de erro
   if (isRouteErrorResponse(error)) {
-    // Erros de rota (ex: 404, 401)
-    errorMessage = error.data?.message || error.statusText;
     errorStatus = error.status;
-  } else if (error instanceof Error) {
-    errorMessage = error.message;
+    errorMessage = error.statusText || error.data?.message;
+  } else if (error && typeof error === 'object' && 'message' in error) {
+    errorMessage = error.message as string;
   } else if (typeof error === 'string') {
     errorMessage = error;
-  } else {
-    console.error(error);
-    errorMessage = 'Ocorreu um erro inesperado.';
   }
 
   return (
