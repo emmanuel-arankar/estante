@@ -8,7 +8,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { ProtectedRoute } from './ProtectedRoute';
 import { RedirectIfAuth } from './RedirectIfAuth';
 
-// Páginas de Erro e 404
+// Páginas de Erro e 404 (com nomes corrigidos)
 import { Error } from '../pages/Error';
 import { NotFound } from '../pages/NotFound';
 
@@ -25,7 +25,7 @@ const Messages = lazy(() => import('../pages/Messages').then(module => ({ defaul
 const Chat = lazy(() => import('../pages/Chat').then(module => ({ default: module.Chat })));
 const Friends = lazy(() => import('../pages/Friends').then(module => ({ default: module.Friends })));
 const Notifications = lazy(() => import('../pages/Notifications').then(module => ({ default: module.Notifications })));
-const SearchPage = lazy(() => import('../pages/Search').then(module => ({ default: module.Search })));
+const SearchPage = lazy(() => import('../pages/Search').then(module => ({ default: module.Search }))); // O nome do componente exportado é SearchPage
 
 const SuspenseFallback = () => (
     <div className="min-h-[calc(100vh-80px)] flex items-center justify-center">
@@ -69,7 +69,6 @@ export const router = createBrowserRouter([
             path: 'profile/:nickname',
             element: <Profile />,
             loader: profileLoader,
-            // CORRIGIDO: Adicionado tipos para `params` e `_data` para ignorar o aviso de não utilizado.
             handle: { crumb: (_data: any, params: Params) => <span>{`@${params.nickname}`}</span> },
           },
           {
