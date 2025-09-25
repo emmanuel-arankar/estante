@@ -2,7 +2,7 @@ import { useRouteError, Link, isRouteErrorResponse } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { AlertTriangle } from 'lucide-react';
 
-export const ErrorPage = () => {
+export const Error = () => {
   const error = useRouteError();
   let errorMessage: string;
   let errorStatus: number | string = 'Erro';
